@@ -67,6 +67,8 @@ Strong isolation limits the impact of failures, security incidents, and misconfi
 * Separate accounts for SDLC environments
 * Shared services hosted in dedicated accounts
 * Production workloads never co-located with non-production
+* No direct network peering between workload accounts
+* Network connectivity only to Shared Services Account for specific services
 
 ---
 
