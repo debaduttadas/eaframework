@@ -190,13 +190,24 @@ Strategic flexibility must be preserved without sacrificing cloud-native benefit
 
 ---
 
-## 5. Ownership
+## 5. Document Control
 
-**Document Owner:** Enterprise Architecture / Cloud Platform Team
-**Applies To:** All AWS workloads and services
+| Field | Value |
+|-------|-------|
+| **Owner** | <Your Name>, Enterprise Architect |
+| **Team** | <Your Team Name> |
+| **Contact** | <your.email@company.com> |
+| **Current Version** | 1.0 |
+| **Applies To** | All AWS workloads and services |
+
+## 6. Change Log
+
+| Version | Date | Author | Description |
+|---------|------|--------|--------------|
+| 1.0 | 2024-01-15 | <Your Name> | Initial version - established core AWS infrastructure principles |
 
 ---
 
-## 6. Summary
+## 7. Summary
 
 These principles provide a **stable foundation for AWS infrastructure decisions**, enabling teams to move fast while maintaining security, consistency, and architectural integrity at enterprise scale.
