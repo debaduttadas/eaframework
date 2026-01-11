@@ -2,11 +2,28 @@
 
 ## 1. Purpose
 
-This document defines the **AWS Organization structure** and **multi-account strategy** for the enterprise. It establishes the foundational account hierarchy, governance controls, and security boundaries that enable scalable and secure cloud operations.
+This document defines the **AWS Organization structure** and **multi-account strategy** for **Integritysystems**. It aims to provide a comprehensive blueprint for establishing a secure, scalable, and well-governed foundation for our cloud infrastructure. 
+
+This document serves as a blueprint for stakeholders, IT teams, and decision-makers, detailing the structure, components, and standards of our AWS environment. By following this architecture, we intend to:
+
+* Standardize our AWS adoption
+* Improve operational efficiency
+* Enhance security posture
+* Ensure alignment with business objectives and compliance requirements
+
+This document is a living reference, updated as our cloud strategy evolves, to maintain its relevance and effectiveness in guiding our AWS journey.
 
 ---
 
-## 2. Scope
+## 2. Background
+
+ISC has embarked on a cloud transformation journey to leverage the benefits of AWS cloud services. As ISC expands its cloud footprint, it introduces the challenges of managing multiple AWS accounts, enforcing security policies, and maintaining compliance across diverse teams and projects.
+
+There is a need for a standardized and secure foundation to support the growing AWS environment. A well-designed AWS account architecture is essential to provide the necessary cohesion and coherence, facilitating sustainable and continuous growth.
+
+---
+
+## 3. Scope
 
 This architecture covers:
 
@@ -19,21 +36,22 @@ This architecture covers:
 
 ---
 
-## 3. Architecture Overview
+## 4. Architecture Overview
 
 ![AWS Landing Zone Architecture](isc-aws-landingzone-arch.drawio.png)
 
-### 3.1 AWS Landing Zone Foundation
+### 4.1 AWS Landing Zone Foundation
 
 The organization is built on **AWS Control Tower** or **AWS Landing Zone** foundation providing:
 
-- **Automated Account Provisioning**: Account Factory for standardized account creation
+- **Account Vending**: Control Tower Account Factory for standardized account creation
+- **Account Segmentation**: Multi-account strategy achieving strong isolation boundaries
 - **Guardrails**: Preventive and detective controls via SCPs and Config rules
 - **Centralized Logging**: CloudTrail, Config, and VPC Flow Logs aggregation
 - **Identity Federation**: AWS SSO integration with corporate identity providers
 - **Network Foundation**: Shared networking infrastructure and connectivity
 
-### 3.2 Organization Structure
+### 4.2 Organization Structure
 
 The AWS Organization follows a **hierarchical multi-account strategy** with the following structure:
 
@@ -69,9 +87,9 @@ Root Organization
 
 ---
 
-## 4. Account Categories
+## 5. Account Categories
 
-### 4.1 Account Role Classification
+### 5.1 Account Role Classification
 
 Accounts are categorized by their primary function within the organization:
 
@@ -90,7 +108,7 @@ Accounts are categorized by their primary function within the organization:
 - **DevOps Accounts**: CI/CD tools and deployment pipelines
 - **Disaster Recovery**: Backup and recovery infrastructure
 
-### 4.2 Account Ownership Model
+### 5.2 Account Ownership Model
 - **Platform Team**: Foundation and core infrastructure accounts
 - **Security Team**: All security-related accounts
 - **Product Teams**: Workload accounts aligned to business domains
@@ -98,9 +116,9 @@ Accounts are categorized by their primary function within the organization:
 
 ---
 
-## 5. Account Definitions
+## 6. Account Definitions
 
-### 5.1 Management Account (Root)
+### 6.1 Management Account (Root)
 - **Purpose**: AWS Organization management and billing consolidation
 - **Responsibilities**: 
   - Organization-wide policies and SCPs
@@ -108,7 +126,7 @@ Accounts are categorized by their primary function within the organization:
   - Root-level security controls
 - **Access**: Highly restricted, break-glass only
 
-### 5.2 Security OU
+### 6.2 Security OU
 
 #### Log Archive Account
 - **Purpose**: Centralized log storage and retention
@@ -125,7 +143,7 @@ Accounts are categorized by their primary function within the organization:
 - **Services**: Security scanning tools, forensics, threat detection
 - **Access**: Security operations team
 
-### 5.3 Core OU
+### 6.3 Core OU
 
 #### Network Account
 - **Purpose**: Centralized networking and connectivity
@@ -142,7 +160,7 @@ Accounts are categorized by their primary function within the organization:
 - **Services**: AWS SSO, identity providers, federation
 - **Access**: Identity management team
 
-### 5.4 Workloads OU
+### 6.4 Workloads OU
 
 #### Production OU
 - **Purpose**: Live production workloads
@@ -171,41 +189,41 @@ Accounts are categorized by their primary function within the organization:
 
 ---
 
-## 6. Service Control Policies (SCPs)
+## 7. Service Control Policies (SCPs)
 
-### 6.1 Organization-Wide Policies
+### 7.1 Organization-Wide Policies
 - Deny root user access (except break-glass)
 - Enforce encryption in transit and at rest
 - Require MFA for console access
 - Prevent deletion of CloudTrail logs
 - Restrict region usage to approved regions
 
-### 6.2 Production-Specific Policies
+### 7.2 Production-Specific Policies
 - Deny instance termination without approval
 - Require resource tagging
 - Prevent public S3 buckets
 - Enforce backup policies
 - Restrict high-cost instance types
 
-### 6.3 Dev-Specific Policies
+### 7.3 Dev-Specific Policies
 - Cost controls and resource limits
 - Automated resource cleanup
 - Limited production service access
 - Development tool permissions
 
-### 6.4 QA-Specific Policies
+### 7.4 QA-Specific Policies
 - Test data management controls
 - Automated testing permissions
 - Limited external connectivity
 - Test environment isolation
 
-### 6.5 UAT-Specific Policies
+### 7.5 UAT-Specific Policies
 - Production-like security controls
 - Business user access permissions
 - Change control requirements
 - Data privacy protections
 
-### 6.6 Sandbox-Specific Policies
+### 7.6 Sandbox-Specific Policies
 - Cost controls and spending limits
 - Prevent access to production networks
 - Auto-shutdown of resources
@@ -213,9 +231,9 @@ Accounts are categorized by their primary function within the organization:
 
 ---
 
-## 7. Cross-Account Access
+## 8. Cross-Account Access
 
-### 7.1 Identity and Authentication
+### 8.1 Identity and Authentication
 
 #### Single Sign-On (SSO)
 - **Primary Method**: AWS SSO (Identity Center) for all human access
@@ -229,13 +247,13 @@ Accounts are categorized by their primary function within the organization:
 - **Emergency Access**: Break-glass procedures with audit logging
 - **API Access**: Temporary credentials via STS assume role
 
-### 7.2 Access Patterns
+### 8.2 Access Patterns
 - **AWS SSO**: Primary authentication mechanism
 - **Cross-Account Roles**: Service-to-service access
 - **Resource Sharing**: RAM for shared resources
 - **Network Access**: Transit Gateway connectivity
 
-### 7.3 Network Integration Principles
+### 8.3 Network Integration Principles
 - **Hub-and-Spoke Model**: Network account as central hub via Transit Gateway
 - **Account Isolation**: No direct network peering between workload accounts
 - **Shared Services Exception**: Only Shared Services Account accessible for specific services
@@ -243,7 +261,7 @@ Accounts are categorized by their primary function within the organization:
 - **Centralized Connectivity**: All external connections through Network account
 - **Service-Based Access**: Network access granted per specific service requirement
 
-### 7.4 Cross-Account Network Access
+### 8.4 Cross-Account Network Access
 - **Network Isolation**: No direct network peering between workload accounts
 - **Shared Services Only**: Network connectivity permitted only to Shared Services Account
 - **Service-Specific Access**: Connectivity limited to specific hosted services only
