@@ -210,6 +210,33 @@ Shared technology across the enterprise creates economies of scale. Concentrated
 
 ---
 
+### Principle 12: Interoperability
+
+**Statement**
+Systems must integrate using standard protocols and well-defined interfaces that decouple external systems from internal implementation, enabling independent evolution.
+
+**Rationale**
+
+**Enable Business Integration:**
+External business integration requires consistent, well-defined interfaces. Standard protocols reduce integration costs and enable reliable partner connections.
+
+**Decouple for Flexibility:**
+Direct coupling between external and internal systems prevents independent evolution. Standard interfaces allow internal modernization without disrupting external integrators.
+
+**Support Managed Evolution:**
+Both enterprise and external parties must evolve over time. Versioning and deprecation policies enable gradual, non-conflicting change for all parties.
+
+**Implications**
+
+* Standard protocols and interfaces adopted for all external integrations
+* Integration architectures decouple external systems from internal implementation
+* Versioning strategies enable multiple interface versions during transitions
+* Deprecation policies include notice periods and migration support
+* Internal architecture evolution proceeds independently of external dependencies
+* Open standards preferred to maximize interoperability and vendor choice
+
+---
+
 ## 4. Governance and Compliance
 
 * All architecture decisions must align with these principles
