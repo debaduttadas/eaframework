@@ -184,6 +184,24 @@ Strategic flexibility must be preserved without sacrificing cloud-native benefit
 
 ---
 
+### Principle 11: Control Technology Diversity
+
+**Statement**
+New technologies, services, and tools must be evaluated and approved from an enterprise perspective before adoption.
+
+**Rationale**
+Uncontrolled technology proliferation increases complexity, operational overhead, security risk, and total cost of ownership. A standardised technology portfolio enables knowledge sharing, reduces duplication, and improves maintainability.
+
+**Implications**
+
+* Solution architects must consult with enterprise architecture before introducing new AWS services, third-party tools, or frameworks
+* Technology choices are evaluated against existing enterprise standards and capabilities
+* Justification required for introducing technology that duplicates existing capabilities
+* Approved technology stack maintained as part of enterprise architecture standards
+* Exceptions require formal architecture review and approval
+
+---
+
 ## 4. Governance and Compliance
 
 * All architecture decisions must align with these principles
