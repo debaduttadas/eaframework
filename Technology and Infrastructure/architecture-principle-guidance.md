@@ -52,7 +52,8 @@ The rationale explains **why** the principle is important and what benefits it p
 * Articulate the benefits of following the principle
 * Connect to organisational strategy or objectives
 * Make the case for why this matters
-* Keep to 2-3 sentences
+* Be precise and comprehensive - provide sufficient detail to justify the principle
+* Focus on clarity and completeness over brevity
 
 ### 3.4 Implications
 

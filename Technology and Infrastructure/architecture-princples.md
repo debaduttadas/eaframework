@@ -1,8 +1,8 @@
-# AWS Infrastructure Architecture Principles
+# Technology and Infrastructure Architecture Principles
 
 ## 1. Purpose
 
-This document defines the **architecture principles** that guide the design, implementation, and governance of AWS infrastructure across the organisation. These principles provide **consistent decision-making guardrails** to ensure that all AWS solutions are secure, scalable, cost-effective, and aligned with enterprise strategy.
+This document defines the **architecture principles** that guide the design, implementation, and governance of technology and infrastructure across the organisation. These principles provide **consistent decision-making guardrails** to ensure that all solutions are secure, scalable, cost-effective, and aligned with enterprise strategy.
 
 The principles are **technology-agnostic where possible**, durable over time, and intended to guide *how decisions are made*, not to prescribe specific tools or designs.
 
@@ -12,7 +12,7 @@ The principles are **technology-agnostic where possible**, durable over time, an
 
 These principles apply to:
 
-* All AWS accounts and environments (Sandbox, Dev, QA, UAT, Prod)
+* All technology platforms and environments (Sandbox, Dev, QA, UAT, Prod)
 * Shared services, platform services, and product workloads
 * Infrastructure, platform, and application-level architectural decisions
 
@@ -22,19 +22,19 @@ They are mandatory unless an explicit exception is approved through architecture
 
 ## 3. Architecture Principles
 
-### Principle 1: Cloud-Native First
+### Principle 1: Platform-Native First
 
 **Statement**
-AWS solutions must be designed using cloud-native patterns and managed services wherever feasible.
+Solutions must leverage platform-native capabilities and managed services wherever feasible.
 
 **Rationale**
-Cloud-native architectures maximise scalability, resilience, security, and operational efficiency while minimising undifferentiated heavy lifting.
+Platform-native architectures maximise scalability, resilience, security, and operational efficiency while minimising operational overhead.
 
 **Implications**
 
-* Prefer managed services over self-managed infrastructure
-* Design for elasticity and failure
-* Avoid lift-and-shift designs unless explicitly justified
+* Managed services preferred over self-managed infrastructure
+* Solutions designed for elasticity and failure tolerance
+* Migration approaches must consider platform capabilities, not just rehosting
 
 ---
 
@@ -54,21 +54,21 @@ Automation reduces human error, improves consistency, accelerates delivery, and 
 
 ---
 
-### Principle 3: Account-Level Isolation
+### Principle 3: Isolation by Boundary
 
 **Statement**
-AWS accounts are the primary unit of isolation for security, blast radius, and governance.
+Strong isolation boundaries must be established for security, blast radius containment, and governance.
 
 **Rationale**
 Strong isolation limits the impact of failures, security incidents, and misconfigurations.
 
 **Implications**
 
-* Separate accounts for SDLC environments
-* Shared services hosted in dedicated accounts
+* Separate isolation boundaries for SDLC environments
+* Shared services hosted in dedicated boundaries
 * Production workloads never co-located with non-production
-* No direct network peering between workload accounts
-* Network connectivity only to Shared Services Account for specific services
+* Network connectivity controlled through designated shared services
+* Direct connectivity between workload boundaries minimised
 
 ---
 
@@ -91,16 +91,16 @@ Preventive and automated security controls reduce risk and ensure continuous com
 ### Principle 5: Centralised Governance, Decentralised Delivery
 
 **Statement**
-Governance is centralised while delivery autonomy is delegated to product teams.
+Governance is centralised while delivery autonomy is decentralised.
 
 **Rationale**
 This balances control with agility, enabling scale without bottlenecks.
 
 **Implications**
 
-* Guardrails are centrally defined and enforced
-* Teams self-service within approved boundaries
-* Exceptions follow a formal approval process
+* Guardrails centrally defined and enforced
+* Self-service enabled within approved boundaries
+* Exceptions require formal approval process
 
 ---
 
@@ -114,9 +114,9 @@ Failure is inevitable in distributed systems; resilience must be intentional.
 
 **Implications**
 
-* No single points of failure
-* Use multi-AZ patterns where applicable
-* Automate recovery and scaling
+* Single points of failure eliminated
+* Redundancy across failure domains where applicable
+* Recovery and scaling automated
 
 ---
 
@@ -174,7 +174,7 @@ Operational excellence depends on visibility into system behaviour.
 Architectures should avoid unnecessary coupling to proprietary services unless justified by value.
 
 **Rationale**
-Strategic flexibility must be preserved without sacrificing cloud-native benefits.
+Strategic flexibility must be preserved without sacrificing platform capabilities and operational efficiency.
 
 **Implications**
 
@@ -190,14 +190,22 @@ Strategic flexibility must be preserved without sacrificing cloud-native benefit
 New technologies, services, and tools must be evaluated and approved from an enterprise perspective before adoption.
 
 **Rationale**
-Uncontrolled technology proliferation increases complexity, operational overhead, security risk, and total cost of ownership. A standardised technology portfolio enables knowledge sharing, reduces duplication, and improves maintainability.
+
+**Reduce Cost and Complexity:**
+Multiple technology constructs require integration and interconnection, creating operational complexity. A limited set of supported components simplifies the technical landscape and reduces total cost of ownership.
+
+**Business Predictability:**
+Standardised technology enables consistent component packaging, predictable implementation impact, reliable valuations and returns, and repeatable testing approaches. This predictability supports business planning while preserving flexibility for strategic technological advancement.
+
+**Enterprise Efficiency:**
+Shared technology across the enterprise creates economies of scale. Concentrated expertise on a focused technology set improves support quality, reduces training costs, and enables efficient resource allocation.
 
 **Implications**
 
-* Solution architects must consult with enterprise architecture before introducing new AWS services, third-party tools, or frameworks
-* Technology choices are evaluated against existing enterprise standards and capabilities
+* Technology choices evaluated against existing enterprise standards and capabilities
 * Justification required for introducing technology that duplicates existing capabilities
 * Approved technology stack maintained as part of enterprise architecture standards
+* Consultation with architecture governance required before introducing new technologies
 * Exceptions require formal architecture review and approval
 
 ---
@@ -218,7 +226,7 @@ Uncontrolled technology proliferation increases complexity, operational overhead
 | **Team** | <Your Team Name> |
 | **Contact** | <your.email@company.com> |
 | **Current Version** | 1.0 |
-| **Applies To** | All AWS workloads and services |
+| **Applies To** | All technology and infrastructure workloads and services |
 
 ## 6. Change Log
 
@@ -230,4 +238,4 @@ Uncontrolled technology proliferation increases complexity, operational overhead
 
 ## 7. Summary
 
-These principles provide a **stable foundation for AWS infrastructure decisions**, enabling teams to move fast while maintaining security, consistency, and architectural integrity at enterprise scale.
+These principles provide a **stable foundation for technology and infrastructure decisions**, enabling the organisation to move fast while maintaining security, consistency, and architectural integrity at enterprise scale.
