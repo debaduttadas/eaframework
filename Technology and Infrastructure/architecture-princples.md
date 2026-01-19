@@ -22,19 +22,19 @@ They are mandatory unless an explicit exception is approved through architecture
 
 ## 3. Architecture Principles
 
-### Principle 1: Platform-Native First
+### Principle 1: Cloud-Native First
 
 **Statement**
-Solutions must leverage platform-native capabilities and managed services wherever feasible.
+Solutions must leverage cloud-native capabilities and managed services wherever feasible.
 
 **Rationale**
-Platform-native architectures maximise scalability, resilience, security, and operational efficiency while minimising operational overhead.
+Cloud-native architectures maximise scalability, resilience, security, and operational efficiency while minimising operational overhead.
 
 **Implications**
 
 * Managed services preferred over self-managed infrastructure
 * Solutions designed for elasticity and failure tolerance
-* Migration approaches must consider platform capabilities, not just rehosting
+* Migration approaches must consider cloud capabilities, not just rehosting
 
 ---
 
