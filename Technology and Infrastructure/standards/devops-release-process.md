@@ -53,113 +53,58 @@ Applies to all code deployments including:
 ## Overview
 The release process follows a progressive deployment model across five standard SDLC environments (Sandbox, Dev, QA, UAT, and Production) with automated CI/CD pipelines and approval gates. This aligns with our enterprise SDLC standards and defines how to work with different environments and release code.
 
+![DevOps Release Process](devops-release.png)
+
 ## AWS Account Structure
 
-| Environment | AWS Account | Purpose | Deployment Type |
-|------------|-------------|---------|----------------|
-| Sandbox | Sandbox Account | Individual testing & experimentation | Manual |
-| Dev | Dev Account | Integration testing | Automated |
-| QA | QA Account | Quality assurance & bug fixes | Automated |
-| UAT | UAT Account | User acceptance testing | Automated with approval |
-| Production | Prod Account | Live production workloads | Automated with approval |
+| Environment | AWS Account | Purpose | Console Write Access | Deployment Type |
+|------------|-------------|---------|---------------------|----------------|
+| Sandbox | Sandbox Account | Individual testing & experimentation | Yes (DevOps teams) | Manual |
+| Dev | Dev Account | Integration testing | No (Bitbucket pipeline only) | Automated |
+| QA | QA Account | Quality assurance & bug fixes | No (Bitbucket pipeline only) | Automated |
+| UAT | UAT Account | User acceptance testing | No (Bitbucket pipeline only) | Automated with approval |
+| Production | Prod Account | Live production workloads | No (Bitbucket pipeline only) | Automated with approval |
+
+### Access Control Policy
+
+**Least Privilege Principle**: Console write access is restricted on Dev, QA, UAT, and Production accounts to maintain environment consistency and enforce infrastructure-as-code practices.
+
+**Rationale**:
+- Prevents configuration drift from manual changes
+- Ensures all changes are tracked and auditable through version control
+- Maintains environment consistency and reproducibility
+- Enforces code review and approval processes
+- Provides complete audit trail for compliance
+
+**Sandbox Account**: DevOps teams have console write access to test and validate infrastructure-as-code (IaC) and CDK code before formal deployment. This allows experimentation and rapid iteration without impacting controlled environments.
 
 ## Branch Strategy & Deployment Flow
 
-### 1. sandbox/* Branch
-- **Purpose**: Individual developer experimentation and testing
-- **Target Environment**: Sandbox Account
-- **When to Use**: Testing changes before formal integration
-- **Deployment Process**: 
-  1. Create sandbox/* branch
-  2. Develop code
-  3. Manually deploy to Sandbox for validation
-- **Deployment Method**: Manual, developer-initiated
-- **Approval Required**: No
+## Environment Flow
 
-### 2. feature/* Branch
-- **Purpose**: New feature development
-- **Target Environment**: Sandbox Account
-- **When to Use**: Developing new features or capabilities
-- **Deployment Process**:
-  1. Branch from develop
-  2. Develop code
-  3. Test locally
-  4. Manual deploy to Sandbox for validation
-- **Deployment Method**: Manual
-- **Approval Required**: No
-- **Merge Target**: develop (via Merge Request)
+```
+Sandbox → Dev → QA → UAT → Production
+```
 
-### 3. develop Branch
-- **Purpose**: Integration branch for ongoing development
-- **Target Environment**: Dev Account
-- **When to Use**: Main integration point for all feature work
-- **Deployment Process**:
-  1. Accept Merge Request from feature/* branches
-  2. Automated pipeline triggers:
-     - Code validation and linting
-     - Security scanning
-     - Build artifacts
-  3. Automated deployment to Dev environment
-- **Deployment Method**: Automated CI/CD
-- **Approval Required**: Merge Request approval only
-- **Branch Protection**: Yes
+## Branch to Environment Mapping
 
-### 4. bugfix/* Branch
-- **Purpose**: Fix issues identified in QA/UAT
-- **Target Environment**: QA Account
-- **When to Use**: Addressing defects found during testing phases
-- **Deployment Process**:
-  1. Branch from develop or release/*
-  2. Implement fix
-  3. Submit Merge Request
-  4. Automated pipeline triggers build and validation
-  5. Automated deployment to QA for verification
-- **Deployment Method**: Automated
-- **Approval Required**: Merge Request approval
-- **Merge Target**: Source branch (develop or release/*)
+| Branch Type | Target Environment(s) | Deployment Method |
+|------------|----------------------|-------------------|
+| sandbox/* | Sandbox | Manual |
+| feature/* | Sandbox | Manual |
+| develop | Dev | Automated (Bitbucket pipeline) |
+| bugfix/* | QA | Automated (Bitbucket pipeline) |
+| release/* | QA → UAT → Production | Automated (Bitbucket pipeline with approval gates) |
+| hotfix/* | All (expedited) | Automated (Bitbucket pipeline with expedited approval) |
+| main | Production (merge only) | N/A (receives merges only) |
 
-### 5. release/* Branch
-- **Purpose**: Release candidate preparation and production deployment
-- **Target Environment**: UAT Account → Prod Account
-- **When to Use**: Preparing changes for production release
-- **Deployment Process**:
-  1. Branch from develop
-  2. Automated deployment to UAT environment
-  3. UAT validation and testing
-  4. **Manual approval gate** (required)
-  5. Automated deployment to Production
-  6. Merge to main branch
-  7. Merge back to develop
-- **Deployment Method**: Automated with manual approval gate
-- **Approval Required**: Yes (before Production deployment)
-- **Approvers**: Technical Lead, Solution Architect
-- **Merge Targets**: main and develop
+## Deployment Workflow Integration
 
-### 6. hotfix/* Branch
-- **Purpose**: Critical production fixes
-- **Target Environment**: All environments (expedited path)
-- **When to Use**: Emergency fixes for production issues
-- **Deployment Process**:
-  1. Branch from main
-  2. Implement critical fix
-  3. Submit Merge Request for expedited review
-  4. Automated build and validation
-  5. Deploy through all environments (accelerated)
-  6. Merge to main after validation
-  7. Merge back to develop
-- **Deployment Method**: Expedited automated pipeline
-- **Approval Required**: Yes (expedited approval process)
-- **Approvers**: Technical Lead (minimum)
-- **SLA**: 4 hours maximum
-
-### 7. main Branch
-- **Purpose**: Production-ready code (source of truth)
-- **Target Environment**: Production Account
-- **When to Use**: Never directly - only receives merges
-- **Deployment Process**: N/A - receives merges only
-- **Deployment Method**: Only receives merges from release/* and hotfix/*
-- **Approval Required**: N/A
-- **Branch Protection**: Yes (no direct commits allowed)
+1. **Development Phase**: Developers work on feature/* branches and test manually in Sandbox
+2. **Integration Phase**: Merged code automatically deploys to Dev via develop branch
+3. **Testing Phase**: Release branches automatically deploy to QA for systematic testing
+4. **Acceptance Phase**: After QA approval, release branches automatically deploy to UAT
+5. **Production Phase**: After UAT approval and manual approval gate, release branches deploy to Production
 
 ## Environment Flow
 
@@ -171,14 +116,20 @@ Sandbox → Dev → QA → UAT → Production
 
 ### Normal Release Cycle
 ```
-1. feature/* → Manual deploy to Sandbox → Test
-2. feature/* → Merge Request → develop
-3. develop → Auto deploy to Dev → Validate
-4. bugfix/* (if needed) → Auto deploy to QA → Test
-5. release/* → Auto deploy to UAT → UAT Testing
-6. release/* → Approval Gate → Auto deploy to Production
+1. feature/* → Manual deploy to Sandbox → Test and iterate IaC/CDK code
+2. feature/* → Finalize code → Pull Request → develop
+3. develop → Auto deploy to Dev (Bitbucket pipeline only) → Validate
+4. release/* → Auto deploy to QA (Bitbucket pipeline only) → Test
+5. release/* → Auto deploy to UAT (Bitbucket pipeline only) → UAT Testing
+6. release/* → Approval Gate → Auto deploy to Production (Bitbucket pipeline only)
 7. release/* → Merge to main and develop
 ```
+
+**Key Points**:
+- All IaC/CDK code testing and iteration happens in Sandbox with console access
+- Once code is finalized in feature branch, raise Pull Request to develop
+- Dev, QA, UAT, and Production deployments are Bitbucket pipeline-only (no console write access)
+- This ensures all controlled environments remain consistent and auditable
 
 ### Hotfix Cycle
 ```
@@ -188,21 +139,29 @@ Sandbox → Dev → QA → UAT → Production
 4. hotfix/* → Merge to main and develop
 ```
 
-## Compliance Requirements
 
-### All Solution Teams Must:
-1. **Follow branch naming conventions** exactly as specified
-2. **Use Merge Requests** for all code integration (no direct commits to protected branches)
-3. **Obtain approvals** before production deployments
-4. **Document changes** in commit messages and Merge Requests
-5. **Test in Sandbox** before submitting Merge Requests
-6. **Validate deployments** at each environment stage
-7. **Rollback plan** must be documented for production changes
 
-### Pipeline Automation
-- All pipelines include: validation, security scanning, linting, and deployment
+### Bitbucket Pipeline Automation
+
+All automated deployments include:
+- Code validation and linting
+- Security scanning (SAST, secrets detection)
+- Infrastructure validation
+- Automated testing
+- Deployment to target environment
+- Post-deployment validation
+
+Pipeline behavior:
+- All Bitbucket pipelines include: validation, security scanning, linting, and deployment
 - Failed pipeline checks block deployment progression
 - Manual approval required for UAT → Production promotion
+
+### Approval Gates
+
+- **Dev**: Pull Request approval only
+- **QA**: Automatic deployment from release/* branch
+- **UAT**: Automatic deployment after QA validation
+- **Production**: Manual approval gate required (Technical Lead + Solution Architect)
 
 ### Branch Protection Rules
 - **main**: No direct commits, requires release/* or hotfix/* merge
@@ -225,3 +184,7 @@ For questions or exception requests, contact:
 - **Enterprise Architecture Team**: [Contact Details]
 
 Exception requests require approval from Enterprise Architecture team.
+
+## Related Documents
+
+- [DevOps Environments](devops-environments.md) - Detailed environment descriptions, access controls, and compliance requirements
